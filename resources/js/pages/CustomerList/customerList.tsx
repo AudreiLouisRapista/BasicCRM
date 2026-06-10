@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm } from '@inertiajs/react';
-import { AlertTriangleIcon } from "lucide-react";
+import { Head, useForm, usePage } from '@inertiajs/react';
+import { AlertTriangleIcon, CheckCheck } from "lucide-react";
 import { useState } from 'react';
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
     Alert,
     AlertDescription,
@@ -19,8 +21,16 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,6 +38,22 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/customer-lists',
     },
 ];
+
+interface CustomerList {
+    id: number,
+    fullname: string,
+    phonenumber: number,
+    email: string,
+    address: string,
+}
+
+
+interface PageProps {
+    flash: {
+        message?: string
+    }
+    customer: CustomerList[]
+}
 
 export default function CustomerList() {
 
@@ -50,9 +76,24 @@ export default function CustomerList() {
         });
     };
 
+    const { customer, flash } = usePage().props as PageProps;
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Customer List" />
+            <div className='m-4'>
+                <div>
+                    {flash.message && (
+                        <Alert className="max-w-md">
+                            <CheckCheck className='h-4 w-4' />
+                            <AlertTitle>Account save successfully</AlertTitle>
+                            <AlertDescription>
+                                {flash.message}
+                            </AlertDescription>
+                        </Alert>
+                    )}
+                </div>
+            </div>
             <div className="m-4">
                 <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
@@ -119,6 +160,41 @@ export default function CustomerList() {
                     </DialogContent>
                 </Dialog>
             </div>
+
+            {customer.length > 0 && (
+                <div className='m-4'>
+                    <Table>
+                        <TableCaption>A list of your recent Customers.</TableCaption>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[100px]">ID</TableHead>
+                                <TableHead>Fullname</TableHead>
+                                <TableHead>Phonenumber</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Address</TableHead>
+                                <TableHead className="text-center">Action</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {customer.map((customer) => (
+                                <TableRow>
+                                    <TableCell className="font-medium">{customer.id}</TableCell>
+                                    <TableCell>{customer.fullname}</TableCell>
+                                    <TableCell>{customer.phonenumber}</TableCell>
+                                    <TableCell>{customer.email}</TableCell>
+                                    <TableCell>{customer.address}</TableCell>
+                                    <TableCell className="text-center">
+                                        <div className='flex items-center justify-center gap-2'>
+                                            <Button className='bg-slate-500 hover:bg-slate-700'>Edit</Button>
+                                            <Button className='bg-red-500 hover:bg-red-700'>Archive</Button>
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+            )}
         </AppLayout>
     );
 }

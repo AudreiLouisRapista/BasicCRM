@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Inertia\Inertia;
+use App\Models\CustomerList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -9,7 +10,11 @@ use Illuminate\Support\Facades\DB;
 class CustomerListController extends Controller
 {
     public function customerlist(){
-        return Inertia::render('CustomerList/customerList', []);
+        $customer = DB::table('customer_lists')
+        ->select('customer_lists.*')
+        ->limit(10)
+        ->get();
+        return Inertia::render('CustomerList/customerList', compact('customer'));
     }
 
 public function addCustomer(Request $request)
@@ -30,7 +35,7 @@ public function addCustomer(Request $request)
             'updated_at'  => now(),
         ]);
             
-        return redirect()->route('customer-list.customerlist');
+        return redirect()->route('customer-list.customerlist')->with('message','Successfully Save!');
 
     } catch (\Exception $e) {
         return redirect()->back()->withErrors([
