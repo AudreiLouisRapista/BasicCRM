@@ -13,6 +13,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
     Route::get('/customer-lists', [CustomerListController:: class, 'customerlist'])->name('customer-list.customerlist');
     Route::post('/add-customer', [CustomerListController:: class, 'addCustomer'])->name('customer-list.addCustomer');
+    Route::post('/archive-customer/{id}', [CustomerListController:: class, 'archive'])->name('customer-list.archive');
 
 });
 

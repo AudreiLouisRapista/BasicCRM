@@ -1,4 +1,5 @@
 import { LucideIcon } from 'lucide-react';
+import { PageProps as InertiaPageProps } from '@inertiajs/core';
 
 export interface Auth {
     user: User;
@@ -37,4 +38,26 @@ export interface User {
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface CustomerList {
+    id: number,
+    fullname: string,
+    phonenumber: string,
+    email: string,
+    address: string,
+}
+
+export interface PaginationData<T>{
+    data: T[],
+    current_page: number,
+    last_page: number,
+    per_page: number,
+    total_page: number,
+}
+export interface PageProps extends InertiaPageProps  {
+    customer: PaginationData<CustomerList>
+    flash: {
+        message?: string
+    }
 }

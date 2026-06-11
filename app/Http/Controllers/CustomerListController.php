@@ -12,8 +12,9 @@ class CustomerListController extends Controller
     public function customerlist(){
         $customer = DB::table('customer_lists')
         ->select('customer_lists.*')
-        ->limit(10)
-        ->get();
+        ->whereNull('deleted_at')
+        ->paginate(5);
+        // ->get();
         return Inertia::render('CustomerList/customerList', compact('customer'));
     }
 
@@ -40,6 +41,22 @@ public function addCustomer(Request $request)
     } catch (\Exception $e) {
         return redirect()->back()->withErrors([
             'errorMessage' => 'An error occurred while saving. Please try again.',
+        ])->withInput();
+        //   dd($e->getMessage()); 
+    }
+}
+
+public function archive($id){
+    try{
+        DB::table('customer_lists')
+        ->where ('id', $id)
+        ->update (['deleted_at' => now()]);
+
+        return redirect()->route('customer-list.customerlist')->with('message','Successfully Archived!');
+
+    }catch (\Exception $e) {
+        return redirect()->back()->withErrors([
+            'errorMessage' => 'An error occurred while archiving. Please try again.',
         ])->withInput();
         //   dd($e->getMessage()); 
     }
