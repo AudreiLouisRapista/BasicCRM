@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { usePage, router } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { useState } from 'react';
-import TablePagination from './TablePagination';
+import TablePagination from '@/components/TablePagination';
 import {
     Table, TableBody, TableCaption, TableCell,
     TableHead, TableHeader, TableRow,

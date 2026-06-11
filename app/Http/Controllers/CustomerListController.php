@@ -13,7 +13,7 @@ class CustomerListController extends Controller
         $customer = DB::table('customer_lists')
         ->select('customer_lists.*')
         ->whereNull('deleted_at')
-        ->paginate(5);
+        ->paginate(10);
         // ->get();
         return Inertia::render('CustomerList/customerList', compact('customer'));
     }
