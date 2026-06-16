@@ -34,7 +34,7 @@ export default function AddCustomerDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" onClick={() => setOpen(true)}>
+                <Button onClick={() => setOpen(true)}>
                     Add Customer
                 </Button>
             </DialogTrigger>

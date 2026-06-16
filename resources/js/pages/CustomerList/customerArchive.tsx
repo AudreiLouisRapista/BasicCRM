@@ -1,8 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem, PageProps } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
-import AddCustomerDialog from './addCustomerDialog';
-import CustomerTable from './customerTable';
+import CustomerTableArchive from './customerTableArchive';
 import { CheckCheck } from "lucide-react";
 
 import {
@@ -15,20 +14,22 @@ import { Button } from '@/components/ui/button';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Customer List',
-        href: '/customer-lists',
+        title: 'Customer Archive',
+        href: '/archive-customer',
     },
 ];
 
 
-export default function CustomerList() {
+export default function CustomerArchive() {
 
     const { flash = {} } = usePage<PageProps>().props;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Customer List" />
-
+            <div className='m-4'>
+                <Link href={route('customer-list.customerlist')}> <Button variant="outline">Back</Button> </Link>
+            </div>
             <div className='m-4'>
                 <div>
                     {flash.message && (
@@ -42,17 +43,10 @@ export default function CustomerList() {
                     )}
                 </div>
             </div>
-            <div className='flex items-left justify-left'>
-                <div className='m-4'>
-                    <AddCustomerDialog />
-                </div>
-                <div className='m-4'>
-                    <Link href={route('customer-list.archiveCustomer')}> <Button variant="outline">View Archive</Button> </Link>
-                </div>
-            </div>
+
 
             <div className='m-4'>
-                <CustomerTable />
+                <CustomerTableArchive />
             </div>
 
         </AppLayout>
