@@ -91,10 +91,10 @@ export default function CustomerTable() {
             <Dialog open={restoreOpen} onOpenChange={setRestoreOpen}>
                 <DialogContent className="max-w-sm">
                     <DialogHeader>
-                        <DialogTitle>Delete Customer</DialogTitle>
+                        <DialogTitle>Restore Customer</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete <strong>{selected?.fullname}</strong>?
-                            This can be restored later.
+                            Are you sure you want to restore <strong>{selectedRestore?.fullname}</strong>?
+                            This can be show in customre list.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter className="mt-4">
