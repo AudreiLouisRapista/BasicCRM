@@ -17,6 +17,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/restore-customer/{id}', [CustomerListController::class, 'restore_customer'])->name('restore_customer');
     Route::post('/add-customer', [CustomerListController:: class, 'addCustomer'])->name('customer-list.addCustomer');
     Route::post('/archive-customer/{id}', [CustomerListController:: class, 'archive'])->name('customer-list.archive');
+    Route::post('/edit-customer/{id}', [CustomerListController::class, 'update'])->name('customer-list.update');
 
 
 });

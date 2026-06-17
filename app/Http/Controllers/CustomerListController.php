@@ -100,4 +100,36 @@ class CustomerListController extends Controller
         return redirect()->route('customer-list.archiveCustomer')->with('message','Successfully Restored!');
 
     }
+
+
+    // Update
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name'        => 'required|string|max:255',
+            'phonenumber' => 'required|string|max:11',
+            'email'       => 'required|email|max:255',
+            'address'     => 'required|string|max:255',
+        ]);
+
+        try {
+            DB::table('customer_lists')
+                ->where('id', $id)
+                ->update([
+                    'fullname'    => $validated['name'],
+                    'phonenumber' => $validated['phonenumber'],
+                    'email'       => $validated['email'],
+                    'address'     => $validated['address'],
+                    'updated_at'  => now(),
+                ]);
+
+            return redirect()->route('customer-list.customerlist')
+                ->with('message', 'Customer updated successfully!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors([
+                'errorMessage' => 'An error occurred while updating.',
+            ])->withInput();
+        }
+    }
 }

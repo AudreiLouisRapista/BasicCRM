@@ -61,3 +61,12 @@ export interface PageProps extends InertiaPageProps  {
         message?: string
     }
 }
+
+export interface CustomerList {
+    id: number,
+    fullname: string,
+    phonenumber: string,
+    email: string,
+    address: string,
+    deleted_at: string | null,
+}

@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { usePage, router } from '@inertiajs/react';
-import { PageProps } from '@/types';
+import { PageProps, CustomerList } from '@/types';
 import { useState } from 'react';
 import TablePagination from '@/components/TablePagination';
+import EditCustomerDialog from './updateCustomerDialog'
 import {
     Table, TableBody, TableCaption, TableCell,
     TableHead, TableHeader, TableRow,
@@ -13,7 +14,6 @@ import {
 } from "@/components/ui/dialog"
 
 export default function CustomerTable() {
-    // In customerTable.tsx
     const { customer = { data: [], current_page: 1, last_page: 1, per_page: 10, total: 0 } }
         = usePage<PageProps>().props;
     const { current_page, last_page } = customer;
@@ -40,6 +40,14 @@ export default function CustomerTable() {
                 setProcessing(false);
             }
         });
+    };
+
+    const [editOpen, setEditOpen] = useState(false);
+    const [selectedEdit, setSelectedEdit] = useState<CustomerList | null>(null);
+
+    const handleEditClick = (item: CustomerList) => {
+        setSelectedEdit(item);
+        setEditOpen(true);
     };
 
     return (
@@ -69,6 +77,12 @@ export default function CustomerTable() {
                 </DialogContent>
             </Dialog>
 
+            <EditCustomerDialog
+                open={editOpen}
+                setOpen={setEditOpen}
+                customer={selectedEdit}
+            />
+
             {/* Table */}
             {customer.data.length > 0 ? (
                 <div className='m-4'>
@@ -94,7 +108,12 @@ export default function CustomerTable() {
                                     <TableCell>{item.address}</TableCell>
                                     <TableCell className="text-center">
                                         <div className='flex items-center justify-center gap-2'>
-                                            <Button className='bg-slate-500 hover:bg-slate-700'>Edit</Button>
+                                            <Button
+                                                className='bg-slate-500 hover:bg-slate-700'
+                                                onClick={() => handleEditClick(item)}
+                                            >
+                                                Edit
+                                            </Button>
                                             <Button
                                                 className='bg-red-500 hover:bg-red-700'
                                                 onClick={() => handleArchiveClick(item.id, item.fullname)}

@@ -782,9 +782,9 @@ export default function Welcome() {
                             <div className="absolute inset-0 rounded-t-lg shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] lg:rounded-t-none lg:rounded-r-lg dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d]" />
                         </div>
                     </main>
-                </div>
+                </div >
                 <div className="hidden h-14.5 lg:block"></div>
-            </div>
+            </div >
         </>
     );
 }
