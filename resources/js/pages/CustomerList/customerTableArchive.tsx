@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { usePage, useForm } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { useState } from 'react';
+import { RotateCcw, Trash2 } from 'lucide-react';
 import TablePagination from '@/components/TablePagination';
 import {
     Table, TableBody, TableCaption, TableCell,
@@ -28,7 +29,7 @@ export default function CustomerTable() {
     };
     const handleConfirmArchive = () => {
         if (!selected) return;
-        destroy(`/force_delete_customer/${selected.id}`, {
+        destroy(`/force-delete-customer/${selected.id}`, {
             onSuccess: () => {
                 setOpen(false);
                 setSelected(null);
@@ -77,7 +78,7 @@ export default function CustomerTable() {
                             Cancel
                         </Button>
                         <Button
-                            className="bg-red-500 hover:bg-red-700"
+                            variant="destructive"
                             onClick={handleConfirmArchive}
                             disabled={processing}
                         >
@@ -102,7 +103,7 @@ export default function CustomerTable() {
                             Cancel
                         </Button>
                         <Button
-                            className="bg-blue-400 hover:bg-blue-700"
+                            className="bg-green-500 hover:bg-green-700"
                             onClick={handleConfirmRestore}
                             disabled={restoreProcessing}
                         >
@@ -125,6 +126,7 @@ export default function CustomerTable() {
                                 <TableHead>Phonenumber</TableHead>
                                 <TableHead>Email</TableHead>
                                 <TableHead>Address</TableHead>
+                                <TableHead>Archive date</TableHead>
                                 <TableHead className="text-center">Action</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -136,19 +138,20 @@ export default function CustomerTable() {
                                     <TableCell>{item.phonenumber}</TableCell>
                                     <TableCell>{item.email}</TableCell>
                                     <TableCell>{item.address}</TableCell>
+                                    <TableCell>{item.deleted_at}</TableCell>
                                     <TableCell className="text-center">
                                         <div className='flex items-center justify-center gap-2'>
                                             <Button disabled={restoreProcessing}
-                                                className='bg-blue-400 hover:bg-blue-700'
+                                                variant="success"
                                                 onClick={() => handleRestoreClick(item.id, item.fullname)}
                                             >
-                                                Restore
+                                                <RotateCcw />
                                             </Button>
                                             <Button disabled={processing}
-                                                className='bg-red-500 hover:bg-red-700'
+                                                variant="destructive"
                                                 onClick={() => handleDeleteClick(item.id, item.fullname)}
                                             >
-                                                Delete
+                                                <Trash2 />
                                             </Button>
                                         </div>
                                     </TableCell>

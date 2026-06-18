@@ -18,7 +18,7 @@ interface EditCustomerDialogProps {
     customer: CustomerList | null; // ← receives selected customer
 }
 
-export default function EditCustomerDialog({ open, setOpen, customer }: EditCustomerDialogProps) {
+export default function UpdateCustomerDialog({ open, setOpen, customer }: EditCustomerDialogProps) {
 
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",

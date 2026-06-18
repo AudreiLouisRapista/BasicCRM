@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import { usePage, router } from '@inertiajs/react';
 import { PageProps, CustomerList } from '@/types';
 import { useState } from 'react';
+import { Badge } from "@/components/ui/badge"
+import { UserPen, FolderDown } from 'lucide-react';
 import TablePagination from '@/components/TablePagination';
-import EditCustomerDialog from './updateCustomerDialog'
+import UpdateCustomerDialog from './updateCustomerDialog'
 import {
     Table, TableBody, TableCaption, TableCell,
     TableHead, TableHeader, TableRow,
@@ -52,7 +54,7 @@ export default function CustomerTable() {
 
     return (
         <div>
-            {/* Confirmation Dialog */}
+            {/* Confirmation Dialog for Archiving */}
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="max-w-sm">
                     <DialogHeader>
@@ -67,7 +69,7 @@ export default function CustomerTable() {
                             Cancel
                         </Button>
                         <Button
-                            className="bg-red-500 hover:bg-red-700"
+                            className="bg-red-500 hover:bg-red-600 text-white"
                             onClick={handleConfirmArchive}
                             disabled={processing}
                         >
@@ -77,7 +79,7 @@ export default function CustomerTable() {
                 </DialogContent>
             </Dialog>
 
-            <EditCustomerDialog
+            <UpdateCustomerDialog
                 open={editOpen}
                 setOpen={setEditOpen}
                 customer={selectedEdit}
@@ -88,17 +90,18 @@ export default function CustomerTable() {
                 <div className='m-4'>
                     <Table>
                         <TableCaption>A list of your recent Customers.</TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[100px]">ID</TableHead>
-                                <TableHead>Fullname</TableHead>
-                                <TableHead>Phonenumber</TableHead>
-                                <TableHead>Email</TableHead>
-                                <TableHead>Address</TableHead>
+                        <TableHeader >
+                            <TableRow >
+                                <TableHead className="w-[100px] text-center">ID</TableHead>
+                                <TableHead className="text-center">Fullname</TableHead>
+                                <TableHead className="text-center">Phonenumber</TableHead>
+                                <TableHead className="text-center">Email</TableHead>
+                                <TableHead className="text-center">Address</TableHead>
+                                <TableHead className="text-center">Status</TableHead>
                                 <TableHead className="text-center">Action</TableHead>
                             </TableRow>
                         </TableHeader>
-                        <TableBody>
+                        <TableBody className="text-center">
                             {customer.data.map((item) => (
                                 <TableRow key={item.id}>
                                     <TableCell className="font-medium">{item.id}</TableCell>
@@ -106,19 +109,19 @@ export default function CustomerTable() {
                                     <TableCell>{item.phonenumber}</TableCell>
                                     <TableCell>{item.email}</TableCell>
                                     <TableCell>{item.address}</TableCell>
+                                    <TableCell> <Badge variant="destructive">Destructive</Badge></TableCell>
                                     <TableCell className="text-center">
                                         <div className='flex items-center justify-center gap-2'>
                                             <Button
-                                                className='bg-slate-500 hover:bg-slate-700'
+                                                variant="success"
                                                 onClick={() => handleEditClick(item)}
                                             >
-                                                Edit
+                                                <UserPen />
                                             </Button>
-                                            <Button
-                                                className='bg-red-500 hover:bg-red-700'
+                                            <Button variant="destructive"
                                                 onClick={() => handleArchiveClick(item.id, item.fullname)}
                                             >
-                                                Archive
+                                                <FolderDown />
                                             </Button>
                                         </div>
                                     </TableCell>

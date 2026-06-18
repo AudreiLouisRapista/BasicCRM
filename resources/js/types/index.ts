@@ -40,13 +40,6 @@ export interface User {
     [key: string]: unknown; // This allows for additional properties...
 }
 
-export interface CustomerList {
-    id: number,
-    fullname: string,
-    phonenumber: string,
-    email: string,
-    address: string,
-}
 
 export interface PaginationData<T>{
     data: T[],
