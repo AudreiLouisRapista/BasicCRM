@@ -1,5 +1,6 @@
 <?php
 use  App\Http\Controllers\CustomerListController;
+use  App\Http\Controllers\AgentController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -19,6 +20,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/archive-customer/{id}', [CustomerListController:: class, 'archive'])->name('customer-list.archive');
     Route::post('/edit-customer/{id}', [CustomerListController::class, 'update'])->name('customer-list.update');
 
+    Route::get('/agent', [AgentController::class, 'index'])->name('agent.index');
+    Route::post('/agent/send', [AgentController::class, 'send'])->name('agent.send');
 
 });
 
