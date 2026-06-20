@@ -5,7 +5,6 @@ import { Send, Bot, User, X, MessageCircle } from 'lucide-react';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
-// Shape of a single chat message
 interface Message {
     role: 'user' | 'bot';
     content: string;
@@ -15,24 +14,18 @@ interface Message {
 
 export default function FloatingChatbot() {
 
-    // Controls if the chat window is open or closed
     const [isOpen, setIsOpen] = useState(false);
-
-    // Stores all chat messages
     const [messages, setMessages] = useState<Message[]>([
         { role: 'bot', content: 'Hi! I am your customer assistant. How can I help you?' }
     ]);
-
-    // Tracks the current input value
     const [input, setInput] = useState('');
-
-    // Tracks if the bot is thinking/loading
     const [loading, setLoading] = useState(false);
 
-    // Reference to the bottom of the chat — used for auto scrolling
+    // 1. Add state to hold onto the database conversation ID context
+    const [conversationId, setConversationId] = useState<string | null>(null);
+
     const bottomRef = useRef<HTMLDivElement>(null);
 
-    // Auto scroll to bottom whenever messages change
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
@@ -41,54 +34,53 @@ export default function FloatingChatbot() {
 
     const sendMessage = async (text?: string) => {
         const userMessage = (text || input).trim();
-        if (!userMessage) return; // ← do nothing if empty
+        if (!userMessage) return;
 
-        setInput('');      // ← clear input field
-        setLoading(true);  // ← show typing indicator
+        setInput('');
+        setLoading(true);
 
-        // Add user message to chat
         const updatedMessages = [...messages, { role: 'user' as const, content: userMessage }];
         setMessages(updatedMessages);
 
         try {
-            // Send message to Laravel agent
             const res = await fetch('/agent/send', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // CSRF token required by Laravel for POST requests
                     'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)
                         ?.content ?? '',
                 },
                 body: JSON.stringify({
                     message: userMessage,
-                    history: messages, // ← send conversation history for context
+                    // 2. Swap out raw message array for our state-tracked tracker ID
+                    conversation_id: conversationId,
                 }),
             });
 
             const data = await res.json();
 
-            // Add bot response to chat
+            // 3. Capture the ID from the backend to ensure subsequent loops match up
+            if (data.conversation_id) {
+                setConversationId(data.conversation_id);
+            }
+
             setMessages(prev => [...prev, { role: 'bot', content: data.response }]);
 
         } catch {
-            // Show error message if request fails
             setMessages(prev => [...prev, {
                 role: 'bot',
                 content: 'Something went wrong. Please try again.'
             }]);
         } finally {
-            setLoading(false); // ← hide typing indicator
+            setLoading(false);
         }
     };
 
     // ── Render ──────────────────────────────────────────────────────────────
 
     return (
-        // Fixed position — stays in bottom right corner of every page
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
 
-            {/* Chat Window — only visible when isOpen is true */}
             {isOpen && (
                 <div className="w-80 h-[450px] bg-background border rounded-2xl shadow-xl flex flex-col overflow-hidden">
 
@@ -98,7 +90,6 @@ export default function FloatingChatbot() {
                             <Bot className="h-4 w-4" />
                             <span className="text-sm font-semibold">Customer Assistant</span>
                         </div>
-                        {/* Close button */}
                         <button onClick={() => setIsOpen(false)}>
                             <X className="h-4 w-4" />
                         </button>
@@ -111,22 +102,19 @@ export default function FloatingChatbot() {
                                 key={index}
                                 className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                             >
-                                {/* Bot icon — only shown on bot messages */}
                                 {msg.role === 'bot' && (
                                     <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center shrink-0 mt-1">
                                         <Bot className="h-3 w-3 text-primary-foreground" />
                                     </div>
                                 )}
 
-                                {/* Message bubble */}
                                 <div className={`max-w-[75%] px-3 py-2 rounded-2xl text-xs ${msg.role === 'user'
-                                    ? 'bg-primary text-primary-foreground' // ← user bubble
-                                    : 'bg-muted text-foreground'           // ← bot bubble
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-muted text-foreground'
                                     }`}>
                                     {msg.content}
                                 </div>
 
-                                {/* User icon — only shown on user messages */}
                                 {msg.role === 'user' && (
                                     <div className="h-6 w-6 rounded-full bg-slate-500 flex items-center justify-center shrink-0 mt-1">
                                         <User className="h-3 w-3 text-white" />
@@ -135,7 +123,6 @@ export default function FloatingChatbot() {
                             </div>
                         ))}
 
-                        {/* Typing indicator — shown while bot is thinking */}
                         {loading && (
                             <div className="flex gap-2 justify-start">
                                 <div className="h-6 w-6 rounded-full bg-primary flex items-center justify-center shrink-0 mt-1">
@@ -147,7 +134,6 @@ export default function FloatingChatbot() {
                             </div>
                         )}
 
-                        {/* Suggestion buttons — shown only at the start */}
                         {messages.length === 1 && (
                             <div className="flex flex-wrap gap-1 mt-2">
                                 {[
@@ -166,7 +152,6 @@ export default function FloatingChatbot() {
                             </div>
                         )}
 
-                        {/* Invisible div at bottom — used for auto scroll */}
                         <div ref={bottomRef} />
                     </div>
 
@@ -192,16 +177,12 @@ export default function FloatingChatbot() {
                 </div>
             )}
 
-            {/* Floating Toggle Button — opens/closes the chat */}
             <Button
                 size="icon"
                 className="h-12 w-12 rounded-full shadow-lg"
                 onClick={() => setIsOpen(!isOpen)}
             >
-                {isOpen
-                    ? <X className="h-5 w-5" />           // ← show X when open
-                    : <MessageCircle className="h-5 w-5" /> // ← show chat icon when closed
-                }
+                {isOpen ? <X className="h-5 w-5" /> : <MessageCircle className="h-5 w-5" />}
             </Button>
         </div>
     );

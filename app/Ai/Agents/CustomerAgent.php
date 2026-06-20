@@ -12,13 +12,19 @@ use App\Ai\Tools\GetArchivedCustomerTool;
 use App\Ai\Tools\GetCustomerCountTool;  
 use App\Ai\Tools\SearchCustomerTool; 
 use Laravel\Ai\Promptable;              // ← Adds prompt() method to agent
+use Laravel\Ai\Concerns\RemembersConversations;
 use Laravel\Ai\Tools\Tool as ToolDefinition; // ← Tool builder
+use App\Models\User;
 use Illuminate\Support\Facades\DB;      // ← Database queries
 use Stringable;
 
 class CustomerAgent implements Agent, Conversational, HasTools
 {
-    use Promptablem, RememberConversation;  // ← Gives this agent the ability to be prompted
+    use Promptable, RemembersConversations;  // ← Gives this agent the ability to be prompted
+
+      public function __construct(public User $user) {
+        $this->user = $user;
+      }
 
     /**
      * Instructions tell the AI how to behave.
