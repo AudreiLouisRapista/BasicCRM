@@ -22,6 +22,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/agent', [AgentController::class, 'index'])->name('agent.index');
     Route::post('/agent/send', [AgentController::class, 'send'])->name('agent.send');
+    Route::get('/agent/conversation', [AgentController::class, 'loadConversation']);
 
 });
 

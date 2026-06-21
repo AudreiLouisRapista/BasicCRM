@@ -33,6 +33,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $request->session()->put('clear_chat_on_login', true);
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
