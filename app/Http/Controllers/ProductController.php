@@ -11,6 +11,7 @@ class ProductController extends Controller
         $product = DB::table('product_lists')
         ->select('product_lists.*')
         ->whereNull('deleted_at')
+        ->orderBy('product_lists.id', 'desc')
         ->paginate(10);
         // ->get();
         return Inertia::render('ProductList/productList', compact('product'));
