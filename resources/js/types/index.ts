@@ -50,6 +50,7 @@ export interface PaginationData<T>{
 }
 export interface PageProps extends InertiaPageProps  {
     customer: PaginationData<CustomerList>
+    product: PaginationData<ProductList>
     flash: {
         message?: string
     }
@@ -61,5 +62,14 @@ export interface CustomerList {
     phonenumber: string,
     email: string,
     address: string,
+    deleted_at: string | null,
+}
+
+export interface ProductList {
+    id: number,
+    product_name: string,
+    product_category: string,
+    product_price: number,
+    product_quantity: number,
     deleted_at: string | null,
 }

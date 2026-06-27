@@ -17,6 +17,11 @@ const mainNavItems: NavItem[] = [
         url: '/customer-lists',
         icon: UserRoundSearch,
     },
+    {
+        title: 'Product Lists',
+        url: '/product-lists',
+        icon: UserRoundSearch,
+    },
 ];
 
 

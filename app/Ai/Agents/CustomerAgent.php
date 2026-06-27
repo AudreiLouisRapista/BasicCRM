@@ -2,25 +2,25 @@
 
 namespace App\Ai\Agents;
 
-use Laravel\Ai\Contracts\Agent;          // ← Base agent contract
-use Laravel\Ai\Contracts\Conversational; // ← Allows conversation history
-use Laravel\Ai\Contracts\HasTools;       // ← Allows agent to use tools
-use Laravel\Ai\Contracts\Tool;           // ← Tool contract
-use Laravel\Ai\Messages\Message;         // ← Message structure
+use Laravel\Ai\Contracts\Agent;          
+use Laravel\Ai\Contracts\Conversational; 
+use Laravel\Ai\Contracts\HasTools;       
+use Laravel\Ai\Contracts\Tool;           
+use Laravel\Ai\Messages\Message;        
 use App\Ai\Tools\GetCustomersTool;    
 use App\Ai\Tools\GetArchivedCustomerTool;    
 use App\Ai\Tools\GetCustomerCountTool;  
 use App\Ai\Tools\SearchCustomerTool; 
-use Laravel\Ai\Promptable;              // ← Adds prompt() method to agent
+use Laravel\Ai\Promptable;             
 use Laravel\Ai\Concerns\RemembersConversations;
-use Laravel\Ai\Tools\Tool as ToolDefinition; // ← Tool builder
+use Laravel\Ai\Tools\Tool as ToolDefinition; 
 use App\Models\User;
-use Illuminate\Support\Facades\DB;      // ← Database queries
+use Illuminate\Support\Facades\DB;    
 use Stringable;
 
 class CustomerAgent implements Agent, Conversational, HasTools
 {
-    use Promptable, RemembersConversations;  // ← Gives this agent the ability to be prompted
+    use Promptable, RemembersConversations;  
 
       public function __construct(public User $user) {
         $this->user = $user;
